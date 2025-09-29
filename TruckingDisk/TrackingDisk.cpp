@@ -4,29 +4,50 @@
 #include <climits>
 #include <cmath>
 #include <conio.h>
+#include <fstream>
+#include <iomanip>
+#include <string>   // chắc chắn có std::string
+#include <cstdio>   // sprintf_s
 using namespace std;
 
-double FCFS(vector<int> yeucau, int dau_doc) {
+// Hàm chuyển int sang string cho VS 2013
+string intToString(int n) {
+	char buf[20];
+	sprintf_s(buf, "%d", n); // dùng sprintf_s cho VS2013
+	return string(buf);
+}
+
+// Cấu trúc lưu kết quả mỗi thuật toán
+struct KetQua {
+	string ten_thuat_toan;
+	int tong;
+	double trung_binh;
+	string thu_tu;
+};
+
+// Thuật toán FCFS
+KetQua FCFS(vector<int> yeucau, int dau_doc) {
 	int tong = 0;
 	int hien_tai = dau_doc;
-	cout << "FCFS thu tu di chuyen: " << hien_tai;
+	string thu_tu = intToString(hien_tai);
+
 	for (int x : yeucau) {
 		tong += abs(hien_tai - x);
 		hien_tai = x;
-		cout << " -> " << x;
+		thu_tu += " -> " + intToString(x);
 	}
-	double khoang_cach_trung_binh = (double)tong / yeucau.size();
-	cout << "\nTong khoang cach: " << tong << " | Khoang cach trung binh: " << khoang_cach_trung_binh << "\n\n";
-	return khoang_cach_trung_binh;
+
+	double trung_binh = (double)tong / yeucau.size();
+	return{ "FCFS", tong, trung_binh, thu_tu };
 }
 
-
-double SSTF(vector<int> yeucau, int dau_doc) {
+// Thuật toán SSTF
+KetQua SSTF(vector<int> yeucau, int dau_doc) {
 	int tong = 0;
 	int hien_tai = dau_doc;
 	vector<bool> da_dung(yeucau.size(), false);
+	string thu_tu = intToString(hien_tai);
 
-	cout << "SSTF thu tu di chuyen: " << hien_tai;
 	for (size_t i = 0; i < yeucau.size(); i++) {
 		int gan_nhat = -1;
 		int kc_min = INT_MAX;
@@ -42,17 +63,18 @@ double SSTF(vector<int> yeucau, int dau_doc) {
 		da_dung[gan_nhat] = true;
 		tong += abs(hien_tai - yeucau[gan_nhat]);
 		hien_tai = yeucau[gan_nhat];
-		cout << " -> " << hien_tai;
+		thu_tu += " -> " + intToString(hien_tai);
 	}
-	double khoang_cach_trung_binh = (double)tong / yeucau.size();
-	cout << "\nTong khoang cach: " << tong << " | Khoang cach trung binh: " << khoang_cach_trung_binh << "\n\n";
-	return khoang_cach_trung_binh;
+
+	double trung_binh = (double)tong / yeucau.size();
+	return{ "SSTF", tong, trung_binh, thu_tu };
 }
 
-
-double SCAN(vector<int> yeucau, int dau_doc, int max_cylinder) {
+// Thuật toán SCAN
+KetQua SCAN(vector<int> yeucau, int dau_doc, int max_cylinder) {
 	int tong = 0;
 	vector<int> trai, phai;
+	string thu_tu = intToString(dau_doc);
 
 	for (int x : yeucau) {
 		if (x < dau_doc) trai.push_back(x);
@@ -62,34 +84,31 @@ double SCAN(vector<int> yeucau, int dau_doc, int max_cylinder) {
 	sort(trai.begin(), trai.end());
 	sort(phai.begin(), phai.end());
 
-	cout << "SCAN (huong ve 0) thu tu di chuyen: " << dau_doc;
-	
 	for (int i = (int)trai.size() - 1; i >= 0; i--) {
 		tong += abs(dau_doc - trai[i]);
 		dau_doc = trai[i];
-		cout << " -> " << dau_doc;
+		thu_tu += " -> " + intToString(dau_doc);
 	}
-	
+
 	tong += dau_doc - 0;
 	dau_doc = 0;
-	cout << " -> " << dau_doc;
+	thu_tu += " -> 0";
 
-	
 	for (int i = 0; i < (int)phai.size(); i++) {
 		tong += abs(dau_doc - phai[i]);
 		dau_doc = phai[i];
-		cout << " -> " << dau_doc;
+		thu_tu += " -> " + intToString(dau_doc);
 	}
 
-	double khoang_cach_trung_binh = (double)tong / yeucau.size();
-	cout << "\nTong khoang cach: " << tong << " | Khoang cach trung binh: " << khoang_cach_trung_binh << "\n\n";
-	return khoang_cach_trung_binh;
+	double trung_binh = (double)tong / yeucau.size();
+	return{ "SCAN", tong, trung_binh, thu_tu };
 }
 
-
-double CSCAN(vector<int> yeucau, int dau_doc, int max_cylinder) {
+// Thuật toán C-SCAN
+KetQua CSCAN(vector<int> yeucau, int dau_doc, int max_cylinder) {
 	int tong = 0;
 	vector<int> trai, phai;
+	string thu_tu = intToString(dau_doc);
 
 	for (int x : yeucau) {
 		if (x < dau_doc) trai.push_back(x);
@@ -99,65 +118,88 @@ double CSCAN(vector<int> yeucau, int dau_doc, int max_cylinder) {
 	sort(trai.begin(), trai.end());
 	sort(phai.begin(), phai.end());
 
-	cout << "C-SCAN (huong ve 0) thu tu di chuyen: " << dau_doc;
-
-	
 	for (size_t i = 0; i < phai.size(); i++) {
 		tong += abs(dau_doc - phai[i]);
 		dau_doc = phai[i];
-		cout << " -> " << dau_doc;
+		thu_tu += " -> " + intToString(dau_doc);
 	}
 
-	
 	tong += abs(dau_doc - max_cylinder);
 	dau_doc = max_cylinder;
-	cout << " -> " << dau_doc;
+	thu_tu += " -> " + intToString(max_cylinder);
 
-	
 	tong += max_cylinder;
 	dau_doc = 0;
-	cout << " -> " << dau_doc;
+	thu_tu += " -> 0";
 
-	
 	for (size_t i = 0; i < trai.size(); i++) {
 		tong += abs(dau_doc - trai[i]);
 		dau_doc = trai[i];
-		cout << " -> " << dau_doc;
+		thu_tu += " -> " + intToString(dau_doc);
 	}
 
-	double khoang_cach_trung_binh = (double)tong / yeucau.size();
-	cout << "\nTong khoang cach: " << tong << " | Khoang cach trung binh: " << khoang_cach_trung_binh << "\n\n";
-	return khoang_cach_trung_binh;
+	double trung_binh = (double)tong / yeucau.size();
+	return{ "C-SCAN", tong, trung_binh, thu_tu };
 }
 
 int main() {
+	ifstream fin("input.txt");
+	if (!fin) {
+		cerr << "Khong the mo file input.txt\n";
+		return 1;
+	}
+
 	int n;
-	cout << "Nhap so luong yeu cau: ";
-	cin >> n;
+	fin >> n;
 	vector<int> yeucau(n);
-	cout << "Nhap cac yeu cau : ";
-	for (int i = 0; i < n; i++) cin >> yeucau[i];
-	int dau_doc; cout << "Nhap vi tri dau doc ban dau: ";
-	cin >> dau_doc;
-	int max_cylinder;
-	cout << "Nhap gia tri cylinder toi da cua dia: ";
-	cin >> max_cylinder;
-	cout << "\n=== KET QUA ===\n";
+	for (int i = 0; i < n; i++) fin >> yeucau[i];
+	int dau_doc; fin >> dau_doc;
+	int max_cylinder; fin >> max_cylinder;
+	fin.close();
 
-	
-	double fcfs_kc = FCFS(yeucau, dau_doc);
-	double sstf_kc = SSTF(yeucau, dau_doc);
-	double scan_kc = SCAN(yeucau, dau_doc, max_cylinder);
-	double cscan_kc = CSCAN(yeucau, dau_doc, max_cylinder);
+	// Hiển thị dữ liệu đầu vào
+	cout << left << setw(25) << "So luong yeu cau" << ": " << n << "\n";
+	cout << left << setw(25) << "Danh sach yeu cau" << ": ";
+	for (int x : yeucau) cout << x << " ";
+	cout << "\n";
+	cout << left << setw(25) << "Vi tri dau doc" << ": " << dau_doc << "\n";
+	cout << left << setw(25) << "Cylinder toi da" << ": " << max_cylinder << "\n\n";
 
-	
-	double min_kc = min({ fcfs_kc, sstf_kc, scan_kc, cscan_kc });
+	// Tính kết quả
+	vector<KetQua> ds;
+	ds.push_back(FCFS(yeucau, dau_doc));
+	ds.push_back(SSTF(yeucau, dau_doc));
+	ds.push_back(SCAN(yeucau, dau_doc, max_cylinder));
+	ds.push_back(CSCAN(yeucau, dau_doc, max_cylinder));
+
+	// Hiển thị bảng kết quả
+	cout << left << setw(12) << "Thuat toan"
+		<< setw(15) << "Tong kc"
+		<< setw(20) << "Khoang cach TB"
+		<< "Thu tu di chuyen\n";
+	cout << string(70, '-') << "\n";
+
+	for (auto &kq : ds) {
+		cout << left << setw(12) << kq.ten_thuat_toan
+			<< setw(15) << kq.tong
+			<< setw(20) << fixed << setprecision(2) << kq.trung_binh
+			<< kq.thu_tu.c_str() << "\n"; // dùng .c_str() để cout nhận dạng
+	}
+
+	// Tìm thuật toán tối ưu
+	double min_kc = ds[0].trung_binh;
+	string toan_toan_toi_uu = ds[0].ten_thuat_toan;
+	for (auto &kq : ds) {
+		if (kq.trung_binh < min_kc) {
+			min_kc = kq.trung_binh;
+			toan_toan_toi_uu = kq.ten_thuat_toan;
+		}
+	}
+
 	cout << "\n=== KET LUAN ===\n";
-	if (min_kc == fcfs_kc) cout << "FCFS la thuat toan toi uu nhat.\n";
-	else if (min_kc == sstf_kc) cout << "SSTF la thuat toan toi uu nhat.\n";
-	else if (min_kc == scan_kc) cout << "SCAN (huong ve 0) la thuat toan toi uu nhat.\n";
-	else cout << "C-SCAN (huong ve 0) la thuat toan toi uu nhat.\n";
+	cout << toan_toan_toi_uu << " la thuat toan toi uu nhat.\n";
 
-	_getch();
+	system("pause"); // giữ cửa sổ console
+
 	return 0;
 }
