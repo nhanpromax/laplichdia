@@ -173,18 +173,25 @@ int main() {
 	ds.push_back(CSCAN(yeucau, dau_doc, max_cylinder));
 
 	// Hiển thị bảng kết quả
-	cout << left << setw(12) << "Thuat toan"
-		<< setw(15) << "Tong kc"
-		<< setw(20) << "Khoang cach TB"
-		<< "Thu tu di chuyen\n";
-	cout << string(70, '-') << "\n";
+cout << left 
+    << setw(12) << "Thuat toan" << "|"
+    << setw(12) << "Tong kc"    << "|"
+    << setw(18) << "Khoang cach TB" << "|"
+    << "Thu tu di chuyen" << "\n";
 
-	for (auto &kq : ds) {
-		cout << left << setw(12) << kq.ten_thuat_toan
-			<< setw(15) << kq.tong
-			<< setw(20) << fixed << setprecision(2) << kq.trung_binh
-			<< kq.thu_tu.c_str() << "\n"; // dùng .c_str() để cout nhận dạng
-	}
+// In dòng kẻ ngang
+cout << string(12, '-') << "+"
+     << string(12, '-') << "+"
+     << string(18, '-') << "+"
+     << string(50, '-') << "\n";
+
+for (auto& kq : ds) {
+    cout << left 
+        << setw(12) << kq.ten_thuat_toan << "|"
+        << setw(12) << kq.tong           << "|"
+        << setw(18) << fixed << setprecision(2) << kq.trung_binh << "|"
+        << kq.thu_tu.c_str() << "\n";
+}
 
 	// Tìm thuật toán tối ưu
 	double min_kc = ds[0].trung_binh;
