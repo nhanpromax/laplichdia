@@ -1,9 +1,9 @@
 #include <iostream>
-#include <conio.h>
 #include <vector>
 #include <algorithm>
 #include <climits>
 #include <cmath>
+#include <conio.h>
 using namespace std;
 
 // FCFS
@@ -124,9 +124,17 @@ void CSCAN(vector<int> yeucau, int dau_doc, int max_cylinder) {
 }
 
 int main() {
-	vector<int> yeucau = { 98, 183, 124, 65, 12, 67 };
-	int dau_doc = 53;
-	int max_cylinder = 199;
+	int n; 
+	cout << "Nhap so luong yeu cau: "; 
+	cin >> n; 
+	vector<int> yeucau(n); 
+	cout << "Nhap cac yeu cau : "; 
+	for (int i = 0; i < n; i++) cin >> yeucau[i]; 
+	int dau_doc; cout << "Nhap vi tri dau doc ban dau: "; 
+	cin >> dau_doc; int max_cylinder; 
+	cout << "Nhap gia tri cylinder toi da cua dia: "; 
+	cin >> max_cylinder; 
+	cout << "\n=== KET QUA ===\n";
 
 	FCFS(yeucau, dau_doc);
 	SSTF(yeucau, dau_doc);
