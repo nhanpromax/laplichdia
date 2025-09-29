@@ -6,8 +6,7 @@
 #include <conio.h>
 using namespace std;
 
-// FCFS
-void FCFS(vector<int> yeucau, int dau_doc) {
+double FCFS(vector<int> yeucau, int dau_doc) {
 	int tong = 0;
 	int hien_tai = dau_doc;
 	cout << "FCFS thu tu di chuyen: " << hien_tai;
@@ -16,11 +15,13 @@ void FCFS(vector<int> yeucau, int dau_doc) {
 		hien_tai = x;
 		cout << " -> " << x;
 	}
-	cout << "\nTong khoang cach: " << tong << "\n\n";
+	double khoang_cach_trung_binh = (double)tong / yeucau.size();
+	cout << "\nTong khoang cach: " << tong << " | Khoang cach trung binh: " << khoang_cach_trung_binh << "\n\n";
+	return khoang_cach_trung_binh;
 }
 
-// SSTF
-void SSTF(vector<int> yeucau, int dau_doc) {
+
+double SSTF(vector<int> yeucau, int dau_doc) {
 	int tong = 0;
 	int hien_tai = dau_doc;
 	vector<bool> da_dung(yeucau.size(), false);
@@ -43,11 +44,13 @@ void SSTF(vector<int> yeucau, int dau_doc) {
 		hien_tai = yeucau[gan_nhat];
 		cout << " -> " << hien_tai;
 	}
-	cout << "\nTong khoang cach: " << tong << "\n\n";
+	double khoang_cach_trung_binh = (double)tong / yeucau.size();
+	cout << "\nTong khoang cach: " << tong << " | Khoang cach trung binh: " << khoang_cach_trung_binh << "\n\n";
+	return khoang_cach_trung_binh;
 }
 
-// SCAN (huong ve 0)
-void SCAN(vector<int> yeucau, int dau_doc, int max_cylinder) {
+
+double SCAN(vector<int> yeucau, int dau_doc, int max_cylinder) {
 	int tong = 0;
 	vector<int> trai, phai;
 
@@ -60,29 +63,31 @@ void SCAN(vector<int> yeucau, int dau_doc, int max_cylinder) {
 	sort(phai.begin(), phai.end());
 
 	cout << "SCAN (huong ve 0) thu tu di chuyen: " << dau_doc;
-	// Di ve ben trai truoc
+	
 	for (int i = (int)trai.size() - 1; i >= 0; i--) {
 		tong += abs(dau_doc - trai[i]);
 		dau_doc = trai[i];
 		cout << " -> " << dau_doc;
 	}
-	// cham bien 0
+	
 	tong += dau_doc - 0;
 	dau_doc = 0;
 	cout << " -> " << dau_doc;
 
-	// sau do quay sang phai
+	
 	for (int i = 0; i < (int)phai.size(); i++) {
 		tong += abs(dau_doc - phai[i]);
 		dau_doc = phai[i];
 		cout << " -> " << dau_doc;
 	}
 
-	cout << "\nTong khoang cach: " << tong << "\n\n";
+	double khoang_cach_trung_binh = (double)tong / yeucau.size();
+	cout << "\nTong khoang cach: " << tong << " | Khoang cach trung binh: " << khoang_cach_trung_binh << "\n\n";
+	return khoang_cach_trung_binh;
 }
 
-// C-SCAN (huong ve 0)
-void CSCAN(vector<int> yeucau, int dau_doc, int max_cylinder) {
+
+double CSCAN(vector<int> yeucau, int dau_doc, int max_cylinder) {
 	int tong = 0;
 	vector<int> trai, phai;
 
@@ -96,52 +101,63 @@ void CSCAN(vector<int> yeucau, int dau_doc, int max_cylinder) {
 
 	cout << "C-SCAN (huong ve 0) thu tu di chuyen: " << dau_doc;
 
-	// Di ve phai truoc
+	
 	for (size_t i = 0; i < phai.size(); i++) {
 		tong += abs(dau_doc - phai[i]);
 		dau_doc = phai[i];
 		cout << " -> " << dau_doc;
 	}
 
-	// cham bien max
+	
 	tong += abs(dau_doc - max_cylinder);
 	dau_doc = max_cylinder;
 	cout << " -> " << dau_doc;
 
-	// nhay ve 0 (khong tinh khoang cach di giua)
+	
 	tong += max_cylinder;
 	dau_doc = 0;
 	cout << " -> " << dau_doc;
 
-	// Di tiep ben trai
+	
 	for (size_t i = 0; i < trai.size(); i++) {
 		tong += abs(dau_doc - trai[i]);
 		dau_doc = trai[i];
 		cout << " -> " << dau_doc;
 	}
 
-	cout << "\nTong khoang cach: " << tong << "\n\n";
+	double khoang_cach_trung_binh = (double)tong / yeucau.size();
+	cout << "\nTong khoang cach: " << tong << " | Khoang cach trung binh: " << khoang_cach_trung_binh << "\n\n";
+	return khoang_cach_trung_binh;
 }
 
 int main() {
-	int n; 
-	cout << "Nhap so luong yeu cau: "; 
-	cin >> n; 
-	vector<int> yeucau(n); 
-	cout << "Nhap cac yeu cau : "; 
-	for (int i = 0; i < n; i++) cin >> yeucau[i]; 
-	int dau_doc; cout << "Nhap vi tri dau doc ban dau: "; 
-	cin >> dau_doc; int max_cylinder; 
-	cout << "Nhap gia tri cylinder toi da cua dia: "; 
-	cin >> max_cylinder; 
+	int n;
+	cout << "Nhap so luong yeu cau: ";
+	cin >> n;
+	vector<int> yeucau(n);
+	cout << "Nhap cac yeu cau : ";
+	for (int i = 0; i < n; i++) cin >> yeucau[i];
+	int dau_doc; cout << "Nhap vi tri dau doc ban dau: ";
+	cin >> dau_doc;
+	int max_cylinder;
+	cout << "Nhap gia tri cylinder toi da cua dia: ";
+	cin >> max_cylinder;
 	cout << "\n=== KET QUA ===\n";
 
-	FCFS(yeucau, dau_doc);
-	SSTF(yeucau, dau_doc);
-	SCAN(yeucau, dau_doc, max_cylinder);
-	CSCAN(yeucau, dau_doc, max_cylinder);
+	
+	double fcfs_kc = FCFS(yeucau, dau_doc);
+	double sstf_kc = SSTF(yeucau, dau_doc);
+	double scan_kc = SCAN(yeucau, dau_doc, max_cylinder);
+	double cscan_kc = CSCAN(yeucau, dau_doc, max_cylinder);
+
+	
+	double min_kc = min({ fcfs_kc, sstf_kc, scan_kc, cscan_kc });
+	cout << "\n=== KET LUAN ===\n";
+	if (min_kc == fcfs_kc) cout << "FCFS la thuat toan toi uu nhat.\n";
+	else if (min_kc == sstf_kc) cout << "SSTF la thuat toan toi uu nhat.\n";
+	else if (min_kc == scan_kc) cout << "SCAN (huong ve 0) la thuat toan toi uu nhat.\n";
+	else cout << "C-SCAN (huong ve 0) la thuat toan toi uu nhat.\n";
 
 	_getch();
 	return 0;
 }
-
